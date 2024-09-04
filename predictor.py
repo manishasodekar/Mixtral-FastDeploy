@@ -6,6 +6,7 @@ import json
 # Configuration for 4-bit quantization
 quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
     bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
 )
@@ -17,6 +18,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Load the model with quantization and Flash Attention
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
+    load_in_4bit=True,
     quantization_config=quantization_config,
     # torch_dtype=torch.float16,
     # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
