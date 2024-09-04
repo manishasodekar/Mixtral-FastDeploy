@@ -1,6 +1,6 @@
 
 *.xml
 *.iml
-*.dockerignore
-*__pycache__/
-*fastdeploy_dbs/
+.dockerignore
+__pycache__/
+fastdeploy_dbs/
