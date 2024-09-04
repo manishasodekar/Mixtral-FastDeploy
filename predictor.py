@@ -21,9 +21,8 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     quantization_config=quantization_config,
-    torch_dtype=torch.float16,
+    torch_dtype="auto",
     attn_implementation="flash_attention_2",  # Enable Flash Attention v2
-    load_in_8bit_fp32_cpu_offload=True,
     device_map="auto"
 ).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
