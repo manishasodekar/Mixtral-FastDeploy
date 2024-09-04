@@ -4,12 +4,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import json
 
 # Configuration for 4-bit quantization
-quantization_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
-    bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
-)
+# quantization_config = BitsAndBytesConfig(
+#     load_in_4bit=True,
+#     bnb_4bit_use_double_quant=True,
+#     bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
+#     bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
+# )
 
 # Load model with Flash Attention, 4-bit quantization, and tokenizer
 model_name = "TheBloke/Mixtral-8x7B-Instruct-v0.1-AWQ"
