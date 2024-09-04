@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # Getting input data from the command line
     import sys
 
-    input_data_json = sys.argv[1]  # Read the JSON input passed via command line
+    input_data_json = [{"prompt": "Write a HelloWorld python code for me."}, {"prompt": "How to make a Tea?"}]  # Read the JSON input passed via command line
     input_data = json.loads(input_data_json)  # Parse the JSON input
 
     start_time = time.time()
