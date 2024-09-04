@@ -8,7 +8,9 @@ quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
-    bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
+    bnb_4bit_compute_dtype=torch.float16,  # Use FP16 for computations
+    load_in_8bit_fp32_cpu_offload = True
+
 )
 
 # Load model with Flash Attention, 4-bit quantization, and tokenizer
