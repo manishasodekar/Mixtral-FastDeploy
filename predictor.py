@@ -18,7 +18,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Load the model with quantization and Flash Attention
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    load_in_4bit=True,
+    # load_in_4bit=True,
     quantization_config=quantization_config,
     # torch_dtype=torch.float16,
     # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
