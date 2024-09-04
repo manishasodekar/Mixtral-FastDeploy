@@ -25,8 +25,7 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.float16,
     # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
     device_map="auto"
-)
-# .to(device)
+).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 
