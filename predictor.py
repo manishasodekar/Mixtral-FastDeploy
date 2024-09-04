@@ -1,13 +1,23 @@
 import time
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import json
 
-# Load model with Flash Attention and tokenizer
+# Configuration for 4-bit quantization
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
+    bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
+)
+
+# Load model with Flash Attention, 4-bit quantization, and tokenizer
 model_name = "mistralai/Mixtral-8x7B-v0.1"
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# Load the model with quantization and Flash Attention
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
+    quantization_config=quantization_config,
     torch_dtype=torch.float16,
     attn_implementation="flash_attention_2",  # Enable Flash Attention v2
     device_map="auto"
