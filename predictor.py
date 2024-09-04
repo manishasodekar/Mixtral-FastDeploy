@@ -12,18 +12,17 @@ quantization_config = BitsAndBytesConfig(
 )
 
 # Load model with Flash Attention, 4-bit quantization, and tokenizer
-# model_name = "mistralai/Mixtral-8x7B-v0.1"
-model_name = "ISTA-DASLab/Mixtral-8x7b-AQLM-2Bit-1x16-hf"
+model_name = "mistralai/Mixtral-8x7B-v0.1"
+# model_name = "ISTA-DASLab/Mixtral-8x7b-AQLM-2Bit-1x16-hf"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Load the model with quantization and Flash Attention
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    # load_in_4bit=True,
-    # quantization_config=True,
+    quantization_config=quantization_config,
     torch_dtype=torch.float16,
-    # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
+    attn_implementation="flash_attention_2",  # Enable Flash Attention v2
     device_map="auto"
 ).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
