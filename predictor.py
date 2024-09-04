@@ -8,13 +8,12 @@ quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",  # Use NormalFloat4 (NF4) quantization
-    bnb_4bit_compute_dtype=torch.float16,  # Use FP16 for computations
-    load_in_8bit_fp32_cpu_offload = True
-
+    bnb_4bit_compute_dtype=torch.float16  # Use FP16 for computations
 )
 
 # Load model with Flash Attention, 4-bit quantization, and tokenizer
-model_name = "mistralai/Mixtral-8x7B-v0.1"
+model_name = "TheBloke/Mixtral-8x7B-Instruct-v0.1-AWQ"
+# model_name = "mistralai/Mixtral-8x7B-v0.1"
 # model_name = "ISTA-DASLab/Mixtral-8x7b-AQLM-2Bit-1x16-hf"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -22,10 +21,11 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Load the model with quantization and Flash Attention
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    quantization_config=quantization_config,
-    torch_dtype="auto",
-    attn_implementation="flash_attention_2",  # Enable Flash Attention v2
-    device_map="auto"
+    # load_in_4bit=True,
+    # quantization_config=True,
+    torch_dtype=torch.float16,
+    # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
+    device_map="cuda:0"
 ).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
@@ -33,7 +33,8 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 # Prediction function
 def generate_text(prompt, max_new_tokens=100, do_sample=True):
     print(f"Generating text for prompt: {prompt}")
-    model_inputs = tokenizer([prompt], return_tensors="pt").to(device)
+    prompt_template = f'''[INST] {prompt} [/INST]'''
+    model_inputs = tokenizer([prompt_template], return_tensors="pt").input_ids.cuda()
     generated_ids = model.generate(
         **model_inputs,
         max_new_tokens=max_new_tokens,
@@ -44,7 +45,7 @@ def generate_text(prompt, max_new_tokens=100, do_sample=True):
 
 
 # Batch processing for multiple prompts
-def predictor(input_data, batch_size=8, max_new_tokens=100):
+def predictor(input_data, batch_size=4, max_new_tokens=100):
     results = []
     prompts = [entry["prompt"] for entry in input_data]  # Extract prompts from input data
 
