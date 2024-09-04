@@ -25,7 +25,7 @@ model = AutoModelForCausalLM.from_pretrained(
     # quantization_config=True,
     torch_dtype=torch.float16,
     # attn_implementation="flash_attention_2",  # Enable Flash Attention v2
-    device_map="cuda:0"
+    device_map="auto"
 ).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
@@ -34,7 +34,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 def generate_text(prompt, max_new_tokens=100, do_sample=True):
     print(f"Generating text for prompt: {prompt}")
     prompt_template = f'''[INST] {prompt} [/INST]'''
-    model_inputs = tokenizer([prompt_template], return_tensors="pt").input_ids.cuda()
+    model_inputs = tokenizer([prompt_template], return_tensors="pt").to(device)
     generated_ids = model.generate(
         **model_inputs,
         max_new_tokens=max_new_tokens,
